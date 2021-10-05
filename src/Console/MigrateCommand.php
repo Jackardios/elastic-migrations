@@ -20,30 +20,19 @@ class MigrateCommand extends Command
      * @var string
      */
     protected $description = 'Run the migrations';
-    /**
-     * @var Migrator
-     */
-    private $migrator;
 
-    public function __construct(Migrator $migrator)
+    public function handle(Migrator $migrator): int
     {
-        parent::__construct();
+        $migrator->setOutput($this->output);
 
-        $this->migrator = $migrator;
-    }
-
-    public function handle(): int
-    {
-        $this->migrator->setOutput($this->output);
-
-        if (!$this->confirmToProceed() || !$this->migrator->isReady()) {
+        if (!$this->confirmToProceed() || !$migrator->isReady()) {
             return 1;
         }
 
         if ($fileName = $this->argument('fileName')) {
-            $this->migrator->migrateOne($fileName);
+            $migrator->migrateOne($fileName);
         } else {
-            $this->migrator->migrateAll();
+            $migrator->migrateAll();
         }
 
         return 0;

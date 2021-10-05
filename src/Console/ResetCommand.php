@@ -19,27 +19,16 @@ class ResetCommand extends Command
      * @var string
      */
     protected $description = 'Rollback all migrations';
-    /**
-     * @var Migrator
-     */
-    private $migrator;
 
-    public function __construct(Migrator $migrator)
+    public function handle(Migrator $migrator): int
     {
-        parent::__construct();
+        $migrator->setOutput($this->output);
 
-        $this->migrator = $migrator;
-    }
-
-    public function handle(): int
-    {
-        $this->migrator->setOutput($this->output);
-
-        if (!$this->confirmToProceed() || !$this->migrator->isReady()) {
+        if (!$this->confirmToProceed() || !$migrator->isReady()) {
             return 1;
         }
 
-        $this->migrator->rollbackAll();
+        $migrator->rollbackAll();
 
         return 0;
     }

@@ -15,27 +15,16 @@ class StatusCommand extends Command
      * @var string
      */
     protected $description = 'Show the status of each migration';
-    /**
-     * @var Migrator
-     */
-    private $migrator;
 
-    public function __construct(Migrator $migrator)
+    public function handle(Migrator $migrator): int
     {
-        parent::__construct();
+        $migrator->setOutput($this->output);
 
-        $this->migrator = $migrator;
-    }
-
-    public function handle(): int
-    {
-        $this->migrator->setOutput($this->output);
-
-        if (!$this->migrator->isReady()) {
+        if (!$migrator->isReady()) {
             return 1;
         }
 
-        $this->migrator->showStatus();
+        $migrator->showStatus();
 
         return 0;
     }
