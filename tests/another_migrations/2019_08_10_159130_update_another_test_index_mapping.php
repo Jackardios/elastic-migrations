@@ -10,7 +10,7 @@ final class UpdateAnotherTestIndexMapping implements MigrationInterface
     {
         Index::putMapping('another_test', static function (Mapping $mapping) {
             $mapping->enableSource();
-            $mapping->text('title');
+            $mapping->text('name');
         });
     }
 
